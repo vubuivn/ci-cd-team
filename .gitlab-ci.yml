@@ -9,9 +9,9 @@ stages:
   - Aggregate Vulnerability Data
   - Remediation
 
-Build-Application:
-  stage: Trigger Build
-  script: gradle --build-cache assemble
+# Build-Application:
+#   stage: Trigger Build
+#   script: gradle --build-cache assemble
 
 SCA:
   stage: SCA/SAST
@@ -34,7 +34,6 @@ faild buid:
   stage: Deploy
   rules:
     - if: $build_result == "faild"
-      when: never
   script:
     - echo "Severe Issuses Found"
 
