@@ -8,10 +8,11 @@ stages:
   - DAST/IAST
   - Aggregate Vulnerability Data
   - Remediation
+  - Release
 
-# Build-Application:
-#   stage: Trigger Build
-#   script: gradle --build-cache assemble
+Build-Application:
+  stage: Trigger Build
+  script: gradle --build-cache assemble
 
 SCA:
   stage: SCA/SAST
@@ -78,8 +79,34 @@ DAST/IAST:
     - echo "CI/CD server initiates DAST/IAST"
 
 Result from DAST/IAST:
-  stage: DAST/IAST 
+  stage: DAST/IAST
+  script:
+    - echo "Process results in CI/CD Server"
+
+Collect data from "build report":
+  stage: Aggregate Vulnerability Data
   rules:
     - if: $build_result == "faild"
   script:
-    - echo "Process results in CI/CD Server"
+    - echo "start to Aggregate data from Build Report"
+
+Collect data from "deploy report":
+  stage: Aggregate Vulnerability Data
+  rules:
+    - if: $deploy_result == "faild"
+  script:
+    - echo "start to Aggregate data from deploy Report"
+
+Log Ticket:
+  stage: Remediation
+  # rules:
+  #   - if: $deploy_result == "faild"
+  script:
+    - echo "Start to log ticket"
+
+Close Ticket:
+  stage: Release
+  # rules:
+  #   - if: $deploy_result == "faild"
+  script:
+    - echo "Close Ticket"
