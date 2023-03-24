@@ -1,0 +1,79 @@
+stages:
+  - build
+  - test
+  - deploy
+  - test DAST/IAST
+
+build-application:
+  stage: build
+  script:
+    - echo "Code Build "
+
+SCA:
+  stage: test
+  script:
+    - echo "Software Composition Analysis (SCA)"
+
+
+SAST:
+  stage: test 
+  script:
+    - echo "Static Application Security Testing (SAST)"
+
+Report:
+  stage: test 
+  script:
+    - echo "Ci/CD result report"
+
+
+faild buid:      # This job runs in the deploy stage.
+  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+#   rules:
+#     - if: $test == "faild"
+#       when: manual
+  script:
+    - echo "Severe Issuses Found"
+
+Alert:      # This job runs in the deploy stage.
+  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+#   rules:
+#     - if: $test == "faild"
+#       when: manual
+  script:
+    - echo "Issue found"
+
+Deploy to Nonprod:
+#   environment: non-prod
+  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+#   rules:
+#     - if: $test == "faild"
+#       when: manual
+  script:
+    - echo "No Issue Found"
+
+Deploy to Nonprod (Issue found):
+#   environment: non-prod
+  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+#   rules:
+#     - if: $test == "faild"
+#       when: manual
+  script:
+    - echo "Issue Found but not severe"
+
+DAST/IAST:
+#   environment: non-prod
+  stage: test DAST/IAST  # It only runs when *both* jobs in the test stage complete successfully.
+#   rules:
+#     - if: $test == "faild"
+#       when: manual
+  script:
+    - echo "CI/CD server initiates DAST/IAST"
+
+Result from DAST/IAST:
+#   environment: non-prod
+  stage: test  # It only runs when *both* jobs in the test stage complete successfully.
+#   rules:
+#     - if: $test == "faild"
+#       when: manual
+  script:
+    - echo "Process results in CI/CD Server"
