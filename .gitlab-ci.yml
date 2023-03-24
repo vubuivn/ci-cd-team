@@ -30,54 +30,48 @@ Report:
     - echo "Ci/CD result report"
 
 
-faild buid:      # This job runs in the deploy stage.
-  stage: Deploy  # It only runs when *both* jobs in the test stage complete successfully.
-#   rules:
-#     - if: $test == "faild"
-#       when: manual
+faild buid:
+  stage: Deploy
+  rules:
+    - if: $Build_Result == "faild"
   script:
     - echo "Severe Issuses Found"
 
-Alert:      # This job runs in the deploy stage.
-  stage: Deploy  # It only runs when *both* jobs in the test stage complete successfully.
-#   rules:
-#     - if: $test == "faild"
-#       when: manual
+Alert:
+  stage: Deploy  
+  rules:
+    - if: $Build_Result == "faild"
   script:
     - echo "Issue found"
 
 Deploy to Nonprod:
 #   environment: non-prod
-  stage: Deploy  # It only runs when *both* jobs in the test stage complete successfully.
-#   rules:
-#     - if: $test == "faild"
-#       when: manual
+  stage: Deploy  
+  rules:
+    - if: $Build_Result != "faild"
   script:
     - echo "No Issue Found"
 
 Deploy to Nonprod (Issue found):
 #   environment: non-prod
-  stage: Deploy  # It only runs when *both* jobs in the test stage complete successfully.
-#   rules:
-#     - if: $test == "faild"
-#       when: manual
+  stage: Deploy  
+  rules:
+    - if: $Build_Result != "faild"
   script:
     - echo "Issue Found but not severe"
 
 DAST/IAST:
 #   environment: non-prod
-  stage: DAST/IAST  # It only runs when *both* jobs in the test stage complete successfully.
-#   rules:
-#     - if: $test == "faild"
-#       when: manual
+  stage: DAST/IAST  
+  rules:
+    - if: $test != "faild"
   script:
     - echo "CI/CD server initiates DAST/IAST"
 
 Result from DAST/IAST:
 #   environment: non-prod
-  stage: DAST/IAST  # It only runs when *both* jobs in the test stage complete successfully.
-#   rules:
-#     - if: $test == "faild"
-#       when: manual
+  stage: DAST/IAST 
+  rules:
+    - if: $test == "faild"
   script:
     - echo "Process results in CI/CD Server"
