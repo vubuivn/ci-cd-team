@@ -14,11 +14,15 @@ Build-Application:
   stage: Trigger Build
   script: gradle --build-cache assemble
 
+
+Package Docker Image:
+  stage: Trigger Build
+  script: echo "DOCKER_BUILDKIT=1 docker build ....""
+
 SCA:
   stage: SCA/SAST
   script:
     - echo "Software Composition Analysis (SCA)"
-
 
 SAST:
   stage: SCA/SAST 
@@ -29,7 +33,6 @@ Report:
   stage: Result Report 
   script:
     - echo "Report result is $build_result"
-
 
 faild buid:
   stage: Deploy
@@ -44,7 +47,7 @@ Alert:
     - if: $build_result == "faild"
       when: never
   script:
-    - echo "Issue found"
+    - echo "Issue found but not severe"
 
 Push Package to Artifactory:
   stage: Deploy
@@ -52,7 +55,7 @@ Push Package to Artifactory:
     - if: $build_result == "faild"
       when: never
   script:
-    - echo "push package to artifactory"
+    - echo "push package to artifactory && docker push"
 
 Deploy to Nonprod:
   stage: Deploy
@@ -60,7 +63,7 @@ Deploy to Nonprod:
     - if: $build_result == "faild"
       when: never
   script:
-    - echo "No Issue Found"
+    - echo "helm upgrade --install"
 
 Deploy to Nonprod (Issue found):
   stage: Deploy  
@@ -69,6 +72,7 @@ Deploy to Nonprod (Issue found):
       when: never
   script:
     - echo "Issue Found but not severe"
+    - echo "helm upgrade --install"
 
 DAST/IAST:
   stage: DAST/IAST
