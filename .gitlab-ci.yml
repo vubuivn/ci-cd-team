@@ -27,28 +27,35 @@ SAST:
 Report:
   stage: Result Report 
   script:
-    - echo "Ci/CD result report"
+    - echo "Report result is $build_result"
 
 
 faild buid:
   stage: Deploy
   rules:
-    - if: $Build_Result == "faild"
+    - if: $build_result == "faild"
   script:
     - echo "Severe Issuses Found"
 
 Alert:
   stage: Deploy  
   rules:
-    - if: $Build_Result == "faild"
+    - if: $build_result == "d"
   script:
     - echo "Issue found"
 
-Deploy to Nonprod:
-#   environment: non-prod
+Push Package to Artifactory:
+  # environment: non-prod
   stage: Deploy  
   rules:
-    - if: $Build_Result != "faild"
+    - if: $build_result == "d"
+  script:
+    - echo "push package to artifactory"
+
+Deploy to Nonprod:
+  stage: Deploy  
+  rules:
+    - if: $build_result == "faild"
   script:
     - echo "No Issue Found"
 
@@ -56,7 +63,7 @@ Deploy to Nonprod (Issue found):
 #   environment: non-prod
   stage: Deploy  
   rules:
-    - if: $Build_Result != "faild"
+    - if: $build_result != "faild"
   script:
     - echo "Issue Found but not severe"
 
@@ -64,7 +71,7 @@ DAST/IAST:
 #   environment: non-prod
   stage: DAST/IAST  
   rules:
-    - if: $test != "faild"
+    - if: $build_result != "faild"
   script:
     - echo "CI/CD server initiates DAST/IAST"
 
@@ -72,6 +79,6 @@ Result from DAST/IAST:
 #   environment: non-prod
   stage: DAST/IAST 
   rules:
-    - if: $test == "faild"
+    - if: $build_result == "faild"
   script:
     - echo "Process results in CI/CD Server"
