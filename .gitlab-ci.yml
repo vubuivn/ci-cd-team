@@ -34,53 +34,51 @@ faild buid:
   stage: Deploy
   rules:
     - if: $build_result == "faild"
+      when: never
   script:
     - echo "Severe Issuses Found"
 
 Alert:
-  stage: Deploy  
+  stage: Deploy'
   rules:
-    - if: $build_result == "d"
-      when: manual
+    - if: $build_result == "faild"
+      when: never
   script:
     - echo "Issue found"
 
 Push Package to Artifactory:
-  # environment: non-prod
-  stage: Deploy  
+  stage: Deploy
   rules:
-    - if: $build_result == "d"
-      when: manual
+    - if: $build_result == "faild"
+      when: never
   script:
     - echo "push package to artifactory"
 
 Deploy to Nonprod:
-  stage: Deploy  
+  stage: Deploy
   rules:
     - if: $build_result == "faild"
+      when: never
   script:
     - echo "No Issue Found"
 
 Deploy to Nonprod (Issue found):
-#   environment: non-prod
   stage: Deploy  
   rules:
-    - if: $build_result != "faild"
-      when: manual
+    - if: $build_result == "faild"
+      when: never
   script:
     - echo "Issue Found but not severe"
 
 DAST/IAST:
-#   environment: non-prod
-  stage: DAST/IAST  
+  stage: DAST/IAST
   rules:
-    - if: $build_result != "faild"
-      when: manual
+    - if: $build_result == "faild"
+      when: never
   script:
     - echo "CI/CD server initiates DAST/IAST"
 
 Result from DAST/IAST:
-#   environment: non-prod
   stage: DAST/IAST 
   rules:
     - if: $build_result == "faild"
