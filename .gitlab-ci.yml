@@ -41,7 +41,7 @@ Alert:
   stage: Deploy  
   rules:
     - if: $build_result == "d"
-    when: manual
+      when: manual
   script:
     - echo "Issue found"
 
@@ -50,7 +50,7 @@ Push Package to Artifactory:
   stage: Deploy  
   rules:
     - if: $build_result == "d"
-    when: manual
+      when: manual
   script:
     - echo "push package to artifactory"
 
@@ -66,7 +66,7 @@ Deploy to Nonprod (Issue found):
   stage: Deploy  
   rules:
     - if: $build_result != "faild"
-    when: manual
+      when: manual
   script:
     - echo "Issue Found but not severe"
 
@@ -75,7 +75,7 @@ DAST/IAST:
   stage: DAST/IAST  
   rules:
     - if: $build_result != "faild"
-    when: manual
+      when: manual
   script:
     - echo "CI/CD server initiates DAST/IAST"
 
