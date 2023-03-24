@@ -1,33 +1,37 @@
-stages:
-  - build
-  - test
-  - deploy
-  - test DAST/IAST
+image: gradle:alpine
 
-build-application:
-  stage: build
-  script:
-    - echo "Code Build "
+stages:
+  - Trigger Build
+  - SCA/SAST
+  - Result Report
+  - Deploy
+  - DAST/IAST
+  - Aggregate Vulnerability Data
+  - Remediation
+
+Build-Application:
+  stage: Trigger Build
+  script: gradle --build-cache assemble
 
 SCA:
-  stage: test
+  stage: SCA/SAST
   script:
     - echo "Software Composition Analysis (SCA)"
 
 
 SAST:
-  stage: test 
+  stage: SCA/SAST 
   script:
     - echo "Static Application Security Testing (SAST)"
 
 Report:
-  stage: test 
+  stage: Result Report 
   script:
     - echo "Ci/CD result report"
 
 
 faild buid:      # This job runs in the deploy stage.
-  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  stage: Deploy  # It only runs when *both* jobs in the test stage complete successfully.
 #   rules:
 #     - if: $test == "faild"
 #       when: manual
@@ -35,7 +39,7 @@ faild buid:      # This job runs in the deploy stage.
     - echo "Severe Issuses Found"
 
 Alert:      # This job runs in the deploy stage.
-  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  stage: Deploy  # It only runs when *both* jobs in the test stage complete successfully.
 #   rules:
 #     - if: $test == "faild"
 #       when: manual
@@ -44,7 +48,7 @@ Alert:      # This job runs in the deploy stage.
 
 Deploy to Nonprod:
 #   environment: non-prod
-  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  stage: Deploy  # It only runs when *both* jobs in the test stage complete successfully.
 #   rules:
 #     - if: $test == "faild"
 #       when: manual
@@ -53,7 +57,7 @@ Deploy to Nonprod:
 
 Deploy to Nonprod (Issue found):
 #   environment: non-prod
-  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  stage: Deploy  # It only runs when *both* jobs in the test stage complete successfully.
 #   rules:
 #     - if: $test == "faild"
 #       when: manual
@@ -62,7 +66,7 @@ Deploy to Nonprod (Issue found):
 
 DAST/IAST:
 #   environment: non-prod
-  stage: test DAST/IAST  # It only runs when *both* jobs in the test stage complete successfully.
+  stage: DAST/IAST  # It only runs when *both* jobs in the test stage complete successfully.
 #   rules:
 #     - if: $test == "faild"
 #       when: manual
@@ -71,7 +75,7 @@ DAST/IAST:
 
 Result from DAST/IAST:
 #   environment: non-prod
-  stage: test  # It only runs when *both* jobs in the test stage complete successfully.
+  stage: DAST/IAST  # It only runs when *both* jobs in the test stage complete successfully.
 #   rules:
 #     - if: $test == "faild"
 #       when: manual
