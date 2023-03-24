@@ -39,7 +39,7 @@ faild buid:
     - echo "Severe Issuses Found"
 
 Alert:
-  stage: Deploy'
+  stage: Deploy
   rules:
     - if: $build_result == "faild"
       when: never
