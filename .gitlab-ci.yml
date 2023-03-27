@@ -1,4 +1,4 @@
-image: vubuivn/java-gradle-maven:1.0.0
+image: vubuivn/java-gradle-maven:1.2.0
 
 stages:
   - Trigger Build
@@ -14,9 +14,9 @@ Check version:
   stage: Trigger Build
   script: java --version && gradle --version && mvn --version
 
-# Build-Application:
-#   stage: Trigger Build
-#   script: gradle --build-cache assemble
+Build-Application:
+  stage: Trigger Build
+  script: gradle --build-cache assemble
 
 Package Docker Image:
   stage: Trigger Build
@@ -57,17 +57,17 @@ Prepare ECR key and Nexus Key:
   rules:
     - if: $build_result == "success" || $build_result == "atler"
   script:
+    - echo "docker login and nexus login (get key from ECR)"
     - echo "Prepare ECR key and Nexus Key"
+    - echo "docker login --username --password"
+    - echo "SET "NEXUS_USERNAME=" && SET "NEXUS_PASSWORD=" && curl -v -u %NEXUS_USERNAME%:%NEXUS_PASSWORD% --upload-file %UPLOAD_FILE% http://%NEXUS_SERVER%/repository/%NEXUS_REPOSITORY%/%UPLOAD_FILE%" 
 
 Push Package to Artifactory:
   stage: Deploy
   rules:
     - if: $build_result == "success" || $build_result == "atler"
   script:
-    - echo "docker login from ECR - and n"
     - echo "push image to ECR & push binary to Nixus"
-    - echo "docker login --username --password"
-    - echo "SET "NEXUS_USERNAME=joebob" && SET "NEXUS_PASSWORD=password" && curl -v -u %NEXUS_USERNAME%:%NEXUS_PASSWORD% --upload-file %UPLOAD_FILE% http://%NEXUS_SERVER%/repository/%NEXUS_REPOSITORY%/%UPLOAD_FILE%"
 
 Deploy to Nonprod:
   stage: Deploy
@@ -106,14 +106,10 @@ Collect data from "deploy report":
 
 Log Ticket:
   stage: Remediation
-  # rules:
-  #   - if: $deploy_result == "faild"
   script:
     - echo "Start to log ticket"
 
 Close Ticket:
   stage: Release
-  # rules:
-  #   - if: $deploy_result == "faild"
   script:
     - echo "Close Ticket"
