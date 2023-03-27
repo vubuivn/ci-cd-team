@@ -67,7 +67,7 @@ Push Package to Artifactory:
     - echo "docker login from ECR - and n"
     - echo "push image to ECR & push binary to Nixus"
     - echo "docker login --username --password"
-    - SET "NEXUS_USERNAME=joebob" && SET "NEXUS_PASSWORD=password" && curl -v -u %NEXUS_USERNAME%:%NEXUS_PASSWORD% --upload-file %UPLOAD_FILE% http://%NEXUS_SERVER%/repository/%NEXUS_REPOSITORY%/%UPLOAD_FILE%
+    - echo "SET "NEXUS_USERNAME=joebob" && SET "NEXUS_PASSWORD=password" && curl -v -u %NEXUS_USERNAME%:%NEXUS_PASSWORD% --upload-file %UPLOAD_FILE% http://%NEXUS_SERVER%/repository/%NEXUS_REPOSITORY%/%UPLOAD_FILE%"
 
 Deploy to Nonprod:
   stage: Deploy
