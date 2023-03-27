@@ -10,10 +10,13 @@ stages:
   - Remediation
   - Release
 
-Build-Application:
+Check version:
   stage: Trigger Build
-  script: gradle --build-cache assemble
+  script: java --version && gradle --version
 
+# Build-Application:
+#   stage: Trigger Build
+#   script: gradle --build-cache assemble
 
 Package Docker Image:
   stage: Trigger Build
