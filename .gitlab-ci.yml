@@ -17,7 +17,8 @@ Build-Application:
 
 Package Docker Image:
   stage: Trigger Build
-  script: echo "docker syntax for docker build image"
+  script: 
+    - echo "docker syntax for docker build image"
 
 SCA:
   stage: SCA/SAST
