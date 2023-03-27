@@ -1,4 +1,4 @@
-image: gradle:alpine
+image: java-gradle-maven:1.0.0
 
 stages:
   - Trigger Build
@@ -49,12 +49,22 @@ Alert:
   script:
     - echo "Issue found but not severe, start to push package"
 
+Prepare ECR key and Nexus Key:
+  stage: Deploy
+  rules:
+    - if: $build_result == "success" || $build_result == "atler"
+  script:
+    - echo "Prepare ECR key and Nexus Key"
+
 Push Package to Artifactory:
   stage: Deploy
   rules:
     - if: $build_result == "success" || $build_result == "atler"
   script:
+    - echo "docker login from ECR - and n"
     - echo "push image to ECR & push binary to Nixus"
+    - echo "docker login --username --password"
+    - SET "NEXUS_USERNAME=joebob" && SET "NEXUS_PASSWORD=password" && curl -v -u %NEXUS_USERNAME%:%NEXUS_PASSWORD% --upload-file %UPLOAD_FILE% http://%NEXUS_SERVER%/repository/%NEXUS_REPOSITORY%/%UPLOAD_FILE%
 
 Deploy to Nonprod:
   stage: Deploy
