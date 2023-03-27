@@ -52,14 +52,14 @@ Alert:
 Push Package to Artifactory:
   stage: Deploy
   rules:
-    - if: $build_result == "deploy" || $build_result == "atler"
+    - if: $build_result == "success" || $build_result == "atler"
   script:
     - echo "push image to ECR & push binary to Nixus"
 
 Deploy to Nonprod:
   stage: Deploy
   rules:
-    - if: $build_result == "deploy" || $build_result == "atler"
+    - if: $build_result == "success" || $build_result == "atler"
       when: never
   script:
     - echo "helm upgrade --install"
