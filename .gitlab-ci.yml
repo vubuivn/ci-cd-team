@@ -12,7 +12,7 @@ stages:
 
 Check version:
   stage: Trigger Build
-  script: java --version && gradle --version
+  script: java --version && gradle --version && mvn --version
 
 # Build-Application:
 #   stage: Trigger Build
