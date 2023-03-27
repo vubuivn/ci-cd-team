@@ -1,4 +1,4 @@
-image: java-gradle-maven:1.0.0
+image: vubuivn/java-gradle-maven:1.0.0
 
 stages:
   - Trigger Build
