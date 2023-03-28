@@ -1,4 +1,4 @@
-image: vubuivn/java-gradle-maven:1.2.0
+image: 621074188511.dkr.ecr.us-east-1.amazonaws.com/application-backend-gradle:latest
 
 stages:
   - Trigger Build
@@ -14,102 +14,102 @@ Check version:
   stage: Trigger Build
   script: java --version && gradle --version && mvn --version
 
-Build-Application:
-  stage: Trigger Build
-  script: gradle --build-cache assemble
+# Build-Application:
+#   stage: Trigger Build
+#   script: gradle --build-cache assemble
 
-Package Docker Image:
-  stage: Trigger Build
-  script: 
-    - echo "docker syntax for docker build image"
+# Package Docker Image:
+#   stage: Trigger Build
+#   script: 
+#     - echo "docker syntax for docker build image"
 
-SCA:
-  stage: SCA/SAST
-  script:
-    - echo "Software Composition Analysis (SCA)"
+# SCA:
+#   stage: SCA/SAST
+#   script:
+#     - echo "Software Composition Analysis (SCA)"
 
-SAST:
-  stage: SCA/SAST 
-  script:
-    - echo "Static Application Security Testing (SAST)"
+# SAST:
+#   stage: SCA/SAST 
+#   script:
+#     - echo "Static Application Security Testing (SAST)"
 
-Report:
-  stage: Result Report 
-  script:
-    - echo "Report result is $build_result"
+# Report:
+#   stage: Result Report 
+#   script:
+#     - echo "Report result is $build_result"
 
-faild buid:
-  stage: Deploy
-  rules:
-    - if: $build_result == "faild"
-  script:
-    - echo "Severe Issuses Found"
+# faild buid:
+#   stage: Deploy
+#   rules:
+#     - if: $build_result == "faild"
+#   script:
+#     - echo "Severe Issuses Found"
 
-Alert:
-  stage: Deploy
-  rules:
-    - if: $build_result == "atler"
-  script:
-    - echo "Issue found but not severe, start to push package"
+# Alert:
+#   stage: Deploy
+#   rules:
+#     - if: $build_result == "atler"
+#   script:
+#     - echo "Issue found but not severe, start to push package"
 
-Prepare ECR key and Nexus Key:
-  stage: Deploy
-  rules:
-    - if: $build_result == "success" || $build_result == "atler"
-  script:
-    - echo "docker login and nexus login (get key from ECR)"
-    - echo "Prepare ECR key and Nexus Key"
-    - echo "docker login --username --password"
-    - echo "SET "NEXUS_USERNAME=" && SET "NEXUS_PASSWORD=" && curl -v -u %NEXUS_USERNAME%:%NEXUS_PASSWORD% --upload-file %UPLOAD_FILE% http://%NEXUS_SERVER%/repository/%NEXUS_REPOSITORY%/%UPLOAD_FILE%" 
+# Prepare ECR key and Nexus Key:
+#   stage: Deploy
+#   rules:
+#     - if: $build_result == "success" || $build_result == "atler"
+#   script:
+#     - echo "docker login and nexus login (get key from ECR)"
+#     - echo "Prepare ECR key and Nexus Key"
+#     - echo "docker login --username --password"
+#     - echo "SET "NEXUS_USERNAME=" && SET "NEXUS_PASSWORD=" && curl -v -u %NEXUS_USERNAME%:%NEXUS_PASSWORD% --upload-file %UPLOAD_FILE% http://%NEXUS_SERVER%/repository/%NEXUS_REPOSITORY%/%UPLOAD_FILE%" 
 
-Push Package to Artifactory:
-  stage: Deploy
-  rules:
-    - if: $build_result == "success" || $build_result == "atler"
-  script:
-    - echo "push image to ECR & push binary to Nixus"
+# Push Package to Artifactory:
+#   stage: Deploy
+#   rules:
+#     - if: $build_result == "success" || $build_result == "atler"
+#   script:
+#     - echo "push image to ECR & push binary to Nixus"
 
-Deploy to Nonprod:
-  stage: Deploy
-  rules:
-    - if: $build_result == "success" || $build_result == "atler"
-      when: never
-  script:
-    - echo "helm upgrade --install"
+# Deploy to Nonprod:
+#   stage: Deploy
+#   rules:
+#     - if: $build_result == "success" || $build_result == "atler"
+#       when: never
+#   script:
+#     - echo "helm upgrade --install"
 
-DAST/IAST:
-  stage: DAST/IAST
-  rules:
-    - if: $build_result == "faild"
-      when: never
-  script:
-    - echo "CI/CD server initiates DAST/IAST"
+# DAST/IAST:
+#   stage: DAST/IAST
+#   rules:
+#     - if: $build_result == "faild"
+#       when: never
+#   script:
+#     - echo "CI/CD server initiates DAST/IAST"
 
-Result from DAST/IAST:
-  stage: DAST/IAST
-  script:
-    - echo "Process results in CI/CD Server"
+# Result from DAST/IAST:
+#   stage: DAST/IAST
+#   script:
+#     - echo "Process results in CI/CD Server"
 
-Collect data from "build report":
-  stage: Aggregate Vulnerability Data
-  rules:
-    - if: $build_result == "faild"
-  script:
-    - echo "start to Aggregate data from Build Report"
+# Collect data from "build report":
+#   stage: Aggregate Vulnerability Data
+#   rules:
+#     - if: $build_result == "faild"
+#   script:
+#     - echo "start to Aggregate data from Build Report"
 
-Collect data from "deploy report":
-  stage: Aggregate Vulnerability Data
-  rules:
-    - if: $deploy_result == "faild"
-  script:
-    - echo "start to Aggregate data from deploy Report"
+# Collect data from "deploy report":
+#   stage: Aggregate Vulnerability Data
+#   rules:
+#     - if: $deploy_result == "faild"
+#   script:
+#     - echo "start to Aggregate data from deploy Report"
 
-Log Ticket:
-  stage: Remediation
-  script:
-    - echo "Start to log ticket"
+# Log Ticket:
+#   stage: Remediation
+#   script:
+#     - echo "Start to log ticket"
 
-Close Ticket:
-  stage: Release
-  script:
-    - echo "Close Ticket"
+# Close Ticket:
+#   stage: Release
+#   script:
+#     - echo "Close Ticket"
